@@ -105,52 +105,56 @@ func sumString(_ numbers: [String], remainder: Int) -> (String, Int) {
   let sumString = String(numbers.reduce(remainder , { result, element in
       result + Int(element)!
   }))
-  let lenght = numbers.first!.count
+  let length = numbers.first!.count
 
-  let index = sumString.index(sumString.endIndex, offsetBy: -1*lenght)
+  let index = sumString.index(sumString.endIndex, offsetBy: -1*length)
   let sum = String(sumString[index...])
 
-  let start = sumString.index(sumString.startIndex, offsetBy: sumString.count - lenght)
+  let start = sumString.index(sumString.startIndex, offsetBy: sumString.count - length)
   let remainder = Int(String(sumString[..<start])) ?? 0
 
   return (sum, remainder)
 }
 
-func firstTenDigitOfSum(_ numbers: String) -> String {
-  let numberList = numbers.split(separator:"\n")
-  let splitLenght = 10
+func splitNumbers(_ numberList: [String], startIndex: Int, endIndex: Int) -> [String] {
+  return numberList.compactMap{ number in
+    let start = number.index(number.startIndex, offsetBy: startIndex)
+    let end = number.index(number.endIndex, offsetBy: -1*endIndex)
+    let splitNumber = String(number[start..<end])
+    return splitNumber
+  }
+}
+
+func sum(_ numbers: String) -> String {
+  let numberList = numbers.split(separator:"\n").compactMap{ String($0) }
+  let splitLength = 10
   var remainder = 0
   var sumResult = ""
   
-  let originLenght = numberList.first!.count
-  var numberRemaindLength = originLenght
+  let originLength = numberList.first!.count
+  var numberRemainLength = originLength
   
-  while numberRemaindLength > 0 {
-    let splitNumberList: [String] = numberList.map{ number in
-      let start = number.index(number.startIndex, offsetBy: numberRemaindLength-splitLenght)
-      let end = number.index(number.endIndex, offsetBy: -1*(originLenght-numberRemaindLength))
-      let range = start..<end
-      let splitNumber = String(number[range])
-      
-      return splitNumber
-    }
+  while numberRemainLength > 0 {
+    let splitNumberList = splitNumbers(numberList,
+                                       startIndex: numberRemainLength-splitLength,
+                                       endIndex: originLength-numberRemainLength)
     
     let sumSplitResult = sumString(splitNumberList, remainder: remainder)
     sumResult = sumSplitResult.0 + sumResult
     remainder = sumSplitResult.1
     
-    numberRemaindLength = numberRemaindLength - splitLenght
+    numberRemainLength = numberRemainLength - splitLength
   }
   
   return "\(remainder)" + sumResult
 }
 
-print(firstTenDigitOfSum("""
+print(sum("""
 37107287533902102798797998220837590246510135740250
 46376937677490009712648124896970078050417018260538
 """))
 
-print(firstTenDigitOfSum("""
+print(sum("""
 37107287533902102798797998220837590246510135740250
 46376937677490009712648124896970078050417018260538
 74324986199524741059474233309513058123726617309629
