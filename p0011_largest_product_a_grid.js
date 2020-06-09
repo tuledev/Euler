@@ -25,89 +25,33 @@ const ARR_DATA = DATA.split(' ').map(item => parseInt(item));
 const WIDTH = 20;
 const HEIGHT = 20;
 
-let greatest = 0;
-
 const dataAt = (r, c) => {
   if (r >= WIDTH) return 0;
   if (c >= HEIGHT) return 0;
   return ARR_DATA[c + r * HEIGHT];
 };
-for (let r = 0; r <= WIDTH-1; r++) {
-  for (let c = 0; c <= HEIGHT-1; c++) {
-    const product1 =
-      dataAt(r, c) * dataAt(r + 1, c) * dataAt(r + 2, c) * dataAt(r + 3, c);
-    const product2 =
-      dataAt(r, c) * dataAt(r, c + 1) * dataAt(r, c + 2) * dataAt(r, c + 3);
-    const product3 =
-      dataAt(r, c) *
-      dataAt(r + 1, c + 1) *
-      dataAt(r + 2, c + 2) *
-      dataAt(r + 3, c + 3);
-    const product4 =
-      dataAt(r, c) *
-      dataAt(r - 1, c + 1) *
-      dataAt(r - 2, c + 2) *
-      dataAt(r - 3, c + 3);
-    // greatest = greatest < product1 ? product1 : greatest;
-    // greatest = greatest < product2 ? product2 : greatest;
-    // greatest = greatest < product3 ? product3 : greatest;
-    if (greatest < product1) {
-      greatest = product1;
-			console.log("TCL: greatest", greatest);
-      console.log(c + '-' + r);
-      console.log(
-        dataAt(r, c) +
-          ' ' +
-          dataAt(r + 1, c) +
-          ' ' +
-          dataAt(r + 2, c) +
-          ' ' +
-          dataAt(r + 3, c)
-      );
-    }
-    if (greatest < product2) {
-      greatest = product2;
-			console.log("TCL: greatest", greatest);
-      console.log(c + '-' + r);
-      console.log(
-        dataAt(r, c) +
-          ' ' +
-          dataAt(r, c + 1) +
-          ' ' +
-          dataAt(r, c + 2) +
-          ' ' +
-          dataAt(r, c + 3)
-      );
-    }
-    if (greatest < product3) {
-      greatest = product3;
-			console.log("TCL: greatest", greatest);
-      console.log(c + '-' + r);
-      console.log(
-        dataAt(r, c) +
-          ' ' +
-          dataAt(r + 1, c + 1) +
-          ' ' +
-          dataAt(r + 2, c + 3) +
-          ' ' +
-          dataAt(r + 3, c + 3)
-      );
-    }
-    if (greatest < product4) {
-      greatest = product4;
-			console.log("TCL: greatest", greatest);
-      console.log(c + '-' + r);
-      console.log(
-        dataAt(r, c) +
-          ' ' +
-          dataAt(r - 1, c + 1) +
-          ' ' +
-          dataAt(r - 2, c + 3) +
-          ' ' +
-          dataAt(r - 3, c + 3)
-      );
+
+const greatestProductOfAdjacent = deep => {
+  var greatest = 0;
+  for (let r = 0; r <= WIDTH - 1; r++) {
+    for (let c = 0; c <= HEIGHT - 1; c++) {
+      let product1 = 1,
+        product2 = 1,
+        product3 = 1,
+        product4 = 1;
+      for (let index = 0; index < deep; index++) {
+        product1 *= dataAt(r, c + index);
+        product2 *= dataAt(r + index, c);
+        product3 *= dataAt(r + index, c + index);
+        product4 *= dataAt(r - index, c + index);
+      }
+      if (greatest < product1) greatest = product1;
+      if (greatest < product2) greatest = product2;
+      if (greatest < product3) greatest = product3;
+      if (greatest < product4) greatest = product4;
     }
   }
-}
+  return greatest;
+};
 
-console.log(greatest);
+console.log(greatestProductOfAdjacent(4));
