@@ -1,6 +1,6 @@
 let fs = require('fs');
 
-let filename = 'p022_names.txt';
+let filename = 'p0022_names.txt';
 
 let content = fs.readFileSync(process.cwd() + '/' + filename).toString();
 
